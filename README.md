@@ -1,8 +1,6 @@
 # claude-code-plugins
 
-My personal [Claude Code plugin marketplace](https://code.claude.com/docs/en/plugin-marketplaces).
-`.claude-plugin/marketplace.json` catalogs the plugins below; each plugin's own
-README covers its requirements and usage.
+This is my [marketplace](https://code.claude.com/docs/en/plugin-marketplaces) of Claude Code plugins. Feel free to use and contribute.
 
 ## Plugins
 
