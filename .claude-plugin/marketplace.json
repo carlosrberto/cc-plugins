@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "claude-code-plugins",
+  "owner": { "name": "Carlos Roberto Gomes Junior" },
+  "metadata": {
+    "version": "1.0.0",
+    "description": "Personal Claude Code plugins."
+  },
+  "plugins": [
+    {
+      "name": "safeguards",
+      "source": "./plugins/safeguards",
+      "description": "Defensive PreToolUse guards for Claude Code: block reading secret files (Read + best-effort Bash), block AI-attribution commit trailers, and block force-pushes to protected branches. Hooks-only — no skills, commands, or credentials."
+    }
+  ]
+}

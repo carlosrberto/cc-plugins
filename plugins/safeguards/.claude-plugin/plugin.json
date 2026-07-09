@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "safeguards",
+  "version": "1.0.0",
+  "description": "Defensive PreToolUse guards for Claude Code: block reading secret files, block AI-attribution commit trailers, and block force-pushes to protected branches.",
+  "author": { "name": "Carlos Roberto Gomes Junior", "email": "carlos.rberto.dev@gmail.com" }
+}

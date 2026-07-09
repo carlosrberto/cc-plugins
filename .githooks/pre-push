@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# pre-push hook — run the repo verification suite and block the push on failure.
+# Tracked in .githooks/ and activated per clone with:
+#   git config core.hooksPath .githooks
+# Bypassable in a pinch with `git push --no-verify`.
+set -euo pipefail
+
+exec "$(git rev-parse --show-toplevel)/scripts/plugin_validate"

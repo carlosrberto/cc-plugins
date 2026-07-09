@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+# plugin_bump — bump a plugin's semantic version in its plugin.json.
+#
+# Usage:   plugin_bump <plugin> <major|minor|patch>
+# Example: plugin_bump safeguards minor     # 1.0.0 -> 1.1.0
+#
+# Bumping the version is what ships changes to installed users — update
+# detection is version-string equality, so pushing commits without a bump is a
+# no-op for them. After bumping, commit with a conventional message, e.g.
+#   chore(safeguards): release v1.1.0
+set -euo pipefail
+
+# Repo root is the parent of this script's scripts/ directory.
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+usage() { echo "usage: plugin_bump <plugin> <major|minor|patch>" >&2; exit 2; }
+
+[ "$#" -eq 2 ] || usage
+plugin="$1"
+part="$2"
+
+command -v jq >/dev/null 2>&1 || {
+  echo "error: 'jq' is required. Install it (e.g. 'brew install jq' or 'sudo apt-get install -y jq')." >&2
+  exit 1
+}
+
+manifest="$ROOT/plugins/$plugin/.claude-plugin/plugin.json"
+[ -f "$manifest" ] || { echo "error: no plugin manifest at $manifest" >&2; exit 1; }
+
+cur="$(jq -r '.version // empty' "$manifest")"
+if [[ ! "$cur" =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+  echo "error: version '${cur:-<missing>}' in $plugin is not semver MAJOR.MINOR.PATCH" >&2
+  exit 1
+fi
+major="${BASH_REMATCH[1]}"; minor="${BASH_REMATCH[2]}"; patch="${BASH_REMATCH[3]}"
+
+case "$part" in
+  major) major=$((major + 1)); minor=0; patch=0 ;;
+  minor) minor=$((minor + 1)); patch=0 ;;
+  patch) patch=$((patch + 1)) ;;
+  *) usage ;;
+esac
+new="$major.$minor.$patch"
+
+# Replace only the version value, leaving the rest of the file's formatting intact.
+tmp="$manifest.tmp"
+awk -v v="$new" '
+  !done && /"version"[[:space:]]*:/ {
+    sub(/"version"[[:space:]]*:[[:space:]]*"[^"]*"/, "\"version\": \"" v "\"")
+    done = 1
+  }
+  { print }
+' "$manifest" > "$tmp"
+mv "$tmp" "$manifest"
+
+# Sanity check: still valid JSON with the expected version.
+if [ "$(jq -r '.version' "$manifest" 2>/dev/null)" != "$new" ]; then
+  echo "error: failed to update version in $manifest" >&2
+  exit 1
+fi
+
+echo "$plugin: $cur -> $new"
+echo "next: commit it, e.g.  git commit -am 'chore($plugin): release v$new'"

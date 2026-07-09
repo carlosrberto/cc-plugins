@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+# plugin_validate — run the repo's verification suite before committing/pushing.
+#
+# Checks:
+#   1. shellcheck on every shell script (root scripts, hooks)
+#   2. jq validity of the JSON manifests
+#   3. `claude plugin validate` for the plugin and the marketplace (if the
+#      `claude` CLI is on PATH; skipped with a notice otherwise)
+#
+# Exits 0 only if every check passes. Run from anywhere — paths resolve relative
+# to the repo root.
+set -euo pipefail
+
+# Repo root is the parent of this script's scripts/ directory.
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT"
+
+# Required tools for this script's core checks.
+for t in shellcheck jq; do
+  command -v "$t" >/dev/null 2>&1 || {
+    echo "error: '$t' is required. Install it (e.g. 'brew install $t' or 'sudo apt-get install -y $t')." >&2
+    exit 1
+  }
+done
+
+fail=0
+step() { printf '\n==> %s\n' "$1"; }
+
+step "shellcheck (scripts, hooks)"
+if shellcheck scripts/* .githooks/* plugins/safeguards/hooks/*.sh; then
+  echo "ok"
+else
+  fail=1
+fi
+
+step "jq (JSON validity)"
+for f in .claude-plugin/marketplace.json plugins/safeguards/.claude-plugin/plugin.json plugins/safeguards/hooks/hooks.json; do
+  if jq empty "$f" 2>/dev/null; then
+    echo "ok: $f"
+  else
+    echo "INVALID: $f" >&2
+    fail=1
+  fi
+done
+
+step "claude plugin validate"
+if command -v claude >/dev/null 2>&1; then
+  claude plugin validate ./plugins/safeguards || fail=1
+  claude plugin validate .                    || fail=1
+else
+  echo "skipped: 'claude' CLI not on PATH"
+fi
+
+if [ "$fail" -eq 0 ]; then
+  printf '\n\xe2\x9c\x93 all checks passed\n'
+else
+  printf '\n\xe2\x9c\x97 some checks failed\n' >&2
+  exit 1
+fi

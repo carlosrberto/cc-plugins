@@ -1,0 +1,39 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+*~
+.directory
+
+# Editors / IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+.*.sw[a-p]
+*.sublime-project
+*.sublime-workspace
+.netrwhist
+
+# Logs & temp
+*.log
+tmp/
+.tmp/
+.cache/
+
+# Environment / local config
+.env
+.env.*
+
+# Claude
+.claude/worktrees
