@@ -1,7 +1,9 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
-  "name": "claude-code-plugins",
-  "owner": { "name": "Carlos Roberto Gomes Junior" },
+  "name": "cc-plugins",
+  "owner": {
+    "name": "Carlos Roberto Gomes Junior"
+  },
   "metadata": {
     "version": "1.0.0",
     "description": "Personal Claude Code plugins."

@@ -11,8 +11,8 @@ This is my [marketplace](https://code.claude.com/docs/en/plugin-marketplaces) of
 ## Install
 
 ```
-/plugin marketplace add carlosrberto/claude-code-plugins
-/plugin install safeguards@claude-code-plugins
+/plugin marketplace add carlosrberto/cc-plugins
+/plugin install safeguards@cc-plugins
 /reload-plugins
 ```
 
@@ -24,12 +24,12 @@ checked-in `.claude/settings.json`:
 ```json
 {
   "extraKnownMarketplaces": {
-    "claude-code-plugins": {
-      "source": { "source": "github", "repo": "carlosrberto/claude-code-plugins" }
+    "cc-plugins": {
+      "source": { "source": "github", "repo": "carlosrberto/cc-plugins" }
     }
   },
   "enabledPlugins": {
-    "safeguards@claude-code-plugins": true
+    "safeguards@cc-plugins": true
   }
 }
 ```

@@ -9,9 +9,9 @@ is the catalog; each plugin lives under `plugins/<name>/`. Current plugins:
 
 - **`safeguards`** — a **hooks-only** plugin (no skills/commands/agents) bundling three defensive `PreToolUse` guards: a credential-read guard, an AI-attribution commit guard, and a protected-branch force-push guard. No credentials or MCP servers. Active for all matching tool calls whenever it's enabled.
 
-The marketplace name is `claude-code-plugins`; plugin names are intentionally
-different from it (a plugin named identically to its marketplace can confuse
-`/plugin install <plugin>@<marketplace>` invocations at a glance).
+The marketplace name is `cc-plugins`. Plugin names are intentionally different
+from the marketplace name (a plugin named identically to its marketplace can
+confuse `/plugin install <plugin>@<marketplace>` invocations at a glance).
 
 **Where docs go** (keep each doc to its audience): `README.md` = install and
 usage. `CONTRIBUTING.md` = plugin development (repo layout, local dev,
@@ -51,7 +51,7 @@ protected branches) as a block at the top of its script:
 ## Conventions for working in this repo
 
 - **Plugin naming.** A plugin's manifest name should read naturally in
-  `/plugin install <name>@claude-code-plugins`.
+  `/plugin install <name>@cc-plugins`.
 - **Hooks are best-effort for Bash, airtight for structured tools.** Every
   guard's docstring states its limitation plainly — don't silently widen a
   guard's claimed coverage beyond what it can actually enforce.

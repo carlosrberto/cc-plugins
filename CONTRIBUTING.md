@@ -1,6 +1,6 @@
 # Contributing
 
-Working on the `claude-code-plugins` marketplace.
+Working on the `cc-plugins` Claude Code marketplace.
 
 ## Repo layout
 

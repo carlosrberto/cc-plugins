@@ -23,8 +23,8 @@ session. See [Bypass / disable](#bypass--disable).
 ## Install
 
 ```
-/plugin marketplace add carlosrberto/claude-code-plugins
-/plugin install safeguards@claude-code-plugins
+/plugin marketplace add carlosrberto/cc-plugins
+/plugin install safeguards@cc-plugins
 /reload-plugins
 ```
 
