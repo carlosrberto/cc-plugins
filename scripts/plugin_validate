@@ -27,14 +27,14 @@ fail=0
 step() { printf '\n==> %s\n' "$1"; }
 
 step "shellcheck (scripts, hooks)"
-if shellcheck scripts/* .githooks/* plugins/safeguards/hooks/*.sh; then
+if shellcheck scripts/* .githooks/* plugins/safeguards/hooks/*.sh plugins/announce/hooks/*.sh; then
   echo "ok"
 else
   fail=1
 fi
 
 step "jq (JSON validity)"
-for f in .claude-plugin/marketplace.json plugins/safeguards/.claude-plugin/plugin.json plugins/safeguards/hooks/hooks.json; do
+for f in .claude-plugin/marketplace.json plugins/safeguards/.claude-plugin/plugin.json plugins/safeguards/hooks/hooks.json plugins/announce/.claude-plugin/plugin.json plugins/announce/hooks/hooks.json; do
   if jq empty "$f" 2>/dev/null; then
     echo "ok: $f"
   else
@@ -46,6 +46,7 @@ done
 step "claude plugin validate"
 if command -v claude >/dev/null 2>&1; then
   claude plugin validate ./plugins/safeguards || fail=1
+  claude plugin validate ./plugins/announce   || fail=1
   claude plugin validate .                    || fail=1
 else
   echo "skipped: 'claude' CLI not on PATH"

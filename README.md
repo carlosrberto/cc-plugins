@@ -7,6 +7,7 @@ This is my [marketplace](https://code.claude.com/docs/en/plugin-marketplaces) of
 | Plugin | Description |
 | ------ | ----------- |
 | `safeguards` | Hooks-only defensive guards (credential-read, AI-attribution, force-push) — [README](./plugins/safeguards/README.md) |
+| `announce` | Hooks-only macOS voice status — speaks aloud when Claude finishes, starts, or needs input — [README](./plugins/announce/README.md) |
 
 ## Install
 

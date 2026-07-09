@@ -13,6 +13,11 @@
       "name": "safeguards",
       "source": "./plugins/safeguards",
       "description": "Defensive PreToolUse guards for Claude Code: block reading secret files (Read + best-effort Bash), block AI-attribution commit trailers, and block force-pushes to protected branches. Hooks-only — no skills, commands, or credentials."
+    },
+    {
+      "name": "announce",
+      "source": "./plugins/announce",
+      "description": "Speaks Claude Code's status aloud via macOS `say`, each announcement preceded by a distinct earcon chime (afplay), so you can step away and be called back: announces when Claude finishes a turn, starts a new task, needs your input/permission, or a subagent finishes. Hooks-only — no skills, commands, or credentials."
     }
   ]
 }

@@ -8,6 +8,7 @@ A personal **Claude Code plugin marketplace**. `.claude-plugin/marketplace.json`
 is the catalog; each plugin lives under `plugins/<name>/`. Current plugins:
 
 - **`safeguards`** — a **hooks-only** plugin (no skills/commands/agents) bundling three defensive `PreToolUse` guards: a credential-read guard, an AI-attribution commit guard, and a protected-branch force-push guard. No credentials or MCP servers. Active for all matching tool calls whenever it's enabled.
+- **`announce`** — a **hooks-only** plugin (no skills/commands/agents) that speaks Claude's status aloud via macOS `say`, preceded by an `afplay` earcon chime, on the `Stop`, `Notification`, `UserPromptSubmit`, and `SubagentStop` events. No credentials or MCP servers. Informational and fail-open: never blocks a turn, exits 0, writes nothing to stdout, and no-ops on non-macOS hosts.
 
 The marketplace name is `cc-plugins`. Plugin names are intentionally different
 from the marketplace name (a plugin named identically to its marketplace can
@@ -47,6 +48,27 @@ protected branches) as a block at the top of its script:
   `.cwd` and denies when the current branch
   (`git rev-parse --abbrev-ref HEAD`) is protected. Feature-branch
   force-pushes are allowed.
+
+`plugins/announce/` is **hooks-only** — no skills, commands, agents, or
+credentials. `hooks/hooks.json` wires four events to one script,
+`hooks/announce.sh`, passing an event tag as `$1`; each announcement plays an
+`afplay` earcon chime and then the phrase:
+
+- `Stop` → `announce.sh finish` — speaks `PHRASE_FINISH` ("Claude is done.").
+- `Notification` → `announce.sh input` — speaks the payload's `.message`
+  (permission / idle prompt), falling back to `PHRASE_INPUT`.
+- `UserPromptSubmit` → `announce.sh start` — speaks `PHRASE_START`.
+- `SubagentStop` → `announce.sh subagent` — speaks `PHRASE_SUBAGENT`.
+
+Deliberately does **not** hook `PreToolUse`/`PostToolUse` (per-command /
+per-file chatter drowns the signal) — only the four "come back" moments. The
+script is **informational, non-blocking, fail-open**: it exits 0 always, writes
+**nothing to stdout** (critical for `UserPromptSubmit`, whose stdout feeds prompt
+context), plays audio in a detached background subshell (`( … & )`) so Claude is
+never delayed, and no-ops when `say` isn't on PATH (non-macOS). Editable config
+(per-event toggles, phrases, `SOUND_*` earcons, `VOICE`, `RATE`) lives in a block
+at the top of the script. Written for macOS's stock bash 3.2 — explicit `say`
+branches, no arrays.
 
 ## Conventions for working in this repo
 
